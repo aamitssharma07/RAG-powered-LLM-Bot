@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Smart Assist</title>
+  <!-- Link to Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Link to custom CSS file -->
+  <link rel="stylesheet" href="style.css">
+  <!-- FontAwesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col justify-center items-center">
+
+  <!-- Chat Icon Button -->
+  <button id="chatIconBtn" class="fixed bottom-8 right-8 bg-blue-500 p-4 rounded-full shadow-lg hover:bg-blue-600 focus:outline-none">
+    <i class="fas fa-comment-dots text-white text-3xl"></i>
+  </button>
+
+  <!-- Chatbot Container -->
+  <div id="chatbotContainer" class="hidden bg-white shadow-lg rounded-lg w-full max-w-sm fixed bottom-16 right-8">
+    
+    <!-- Chat Header -->
+    <div class="bg-blue-500 text-white p-4 rounded-t-lg flex justify-between items-center">
+      <div>
+        <h1 class="text-lg font-bold">Hi User <span class="ml-1">👋</span></h1>
+      </div>
+      <button id="closeChat" class="text-white text-xl">&times;</button>
+    </div>
+    
+    <!-- Chat Input Area -->
+    <div class="p-4">
+      <div class="flex items-center border rounded-lg overflow-hidden p-2 bg-gray-100">
+        <button id="voiceBtn" class="text-blue-500 p-2 mr-2">
+          <i class="fas fa-microphone"></i> <!-- Voice Input Icon -->
+        </button>
+        <input id="userInput" type="text" placeholder='Type a message or use voice...' 
+               class="flex-1 bg-transparent border-none outline-none text-sm p-2" />
+        <button id="sendBtn" class="bg-blue-500 text-white px-3 py-2 rounded-lg">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Chat messages will appear here -->
+    <div id="messageContainer" class="p-4 space-y-2 overflow-y-auto h-64"></div>
+    
+  </div>
+
+  <!-- Include your JavaScript file -->
+  <script src="app.js"></script>
+</body>
+</html>

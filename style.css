@@ -1,0 +1,97 @@
+/* General body background styling with background image */
+body {
+  background-image: url('images/avery-evans-RJQE64NmC_o-unsplash.jpg'); /* Update path if needed */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh; /* Ensure it covers the full viewport height */
+}
+
+/* Chatbot window styling */
+#chatbotContainer {
+  max-width: 400px; /* Adjust for the chat container width */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+
+/* Chat Header */
+#chatbotContainer .bg-blue-500 {
+  background-color: #0053a0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Chat input */
+#userInput {
+  flex: 1;
+  background-color: #f1f1f1;
+  padding: 8px;
+  border: none;
+  outline: none;
+  border-radius: 6px;
+}
+
+/* Chat input button */
+#sendBtn {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  margin-left: 8px;
+}
+
+/* Chat messages container */
+#messageContainer {
+  max-height: 300px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* User message styling (right-aligned, with a lighter background color) */
+.user-message {
+  align-self: flex-end; /* Align to the right */
+  background-color: #4682B4; /* Lighter shade of blue for user messages */
+  color: white; /* Text color for better contrast */
+  padding: 10px;
+  border-radius: 10px;
+  position: relative; /* Position relative to place the timestamp properly */
+}
+
+/* Bot message styling (left-aligned, with a proper background color and padding) */
+.bot-message {
+  align-self: flex-start; /* Align to the left */
+  background-color: #E6E6E6; /* Light gray for bot messages */
+  color: black;
+  padding: 10px;
+  border-radius: 10px;
+  position: relative; /* Position relative to place the timestamp properly */
+}
+
+/* Timestamp styling (for both user and bot messages) */
+.timestamp {
+  font-size: 0.8rem;
+  color: #ffffff; /* White timestamp for user messages */
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
+}
+
+/* Timestamp styling for bot messages (visible on light gray background) */
+.bot-message .timestamp {
+  color: #999999; /* Darker gray for visibility */
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
+}
+
+/* Adjusting margins between message content and timestamp */
+.user-message .timestamp, .bot-message .timestamp {
+  margin-left: 10px; /* Add space between the text and timestamp */
+}
