@@ -33,18 +33,18 @@ This project integrates the latest advancements in natural language understandin
 ## Tech Stack
 
 - **Frontend**: HTML, CSS, JavaScript, Tailwind CSS
-- **Backend**: Retrieval-Augmented Generation (RAG) with a vector database and Large Language Model (LLM) for dynamic responses.
+- **Backend**: Retrieval-augmented generation (RAG) with a vector database and Large Language Model (LLM) for dynamic responses.
 - **APIs**: Web Speech API for voice input and speech synthesis.
 
 ## Installation
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/faq-chatbot-rag-llm.git
+    git clone https://github.com/aamitssharma07/RAG-powered-LLM-Bot.git
     ```
 2. Navigate into the project directory:
     ```bash
-    cd faq-chatbot-rag-llm
+    cd RAG-powered-LLM-Bot
     ```
 3. Open `index.html` in your browser to interact with the chatbot.
 
