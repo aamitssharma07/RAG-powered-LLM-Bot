@@ -51,7 +51,7 @@ This project integrates the latest advancements in natural language understandin
 ## Usage
 
 - **Sending Messages**: Type a message or speak using the voice input button, and the chatbot will respond.
-- **Text and Voice Output**: Bot responses can be text and audio, which can be played by clicking the volume icon in the chatbot's response.
+- **Text and Voice Output**: Bot generated both text and audio responses, which can be played by clicking the volume icon in the chatbot's response.
 - **Multi-Turn Conversations**: You can ask follow-up questions, and the chatbot will maintain the context of the conversation.
 
 ## Future Enhancements
