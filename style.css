@@ -4,94 +4,171 @@ body {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  min-height: 100vh; /* Ensure it covers the full viewport height */
+  min-height: 100vh;
 }
 
 /* Chatbot window styling */
 #chatbotContainer {
-  max-width: 400px; /* Adjust for the chat container width */
+  max-width: 400px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   overflow: hidden;
   position: fixed;
   bottom: 20px;
   right: 20px;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Initially hide the chatbot container */
+#chatbotContainer.hidden {
+  display: none;
 }
 
 /* Chat Header */
 #chatbotContainer .bg-blue-500 {
   background-color: #0053a0;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  padding: 0 16px;
+  height: 64px;
+  position: relative;
 }
 
-/* Chat input */
+/* Minimize Chat Button Styling */
+.close-chat-btn {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.close-chat-btn i {
+  font-size: 1.125rem; /* Matches text-lg in Tailwind CSS */
+}
+
+.close-chat-btn:hover {
+  color: #ffcc00; /* Optional: Change icon color on hover */
+}
+
+/* Chat messages container */
+#messageContainer {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+}
+
+/* Chat input container */
+#chatbotContainer .p-4 .flex {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Input field */
 #userInput {
   flex: 1;
-  background-color: #f1f1f1;
+  background-color: transparent;
   padding: 8px;
   border: none;
   outline: none;
-  border-radius: 6px;
+  font-size: 0.875rem;
 }
 
-/* Chat input button */
+#userInput::placeholder {
+  color: #999;
+}
+
+/* Send button */
 #sendBtn {
   padding: 8px 16px;
   background-color: #007bff;
   color: #fff;
   border: none;
-  border-radius: 6px;
-  margin-left: 8px;
+  cursor: pointer;
 }
 
-/* Chat messages container */
-#messageContainer {
-  max-height: 300px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
+#sendBtn:hover {
+  background-color: #0056b3;
 }
 
-/* User message styling (right-aligned, with a lighter background color) */
+/* Apply rounded corners to input field and send button */
+#userInput,
+#sendBtn {
+  border-radius: 8px;
+}
+
+/* User message styling (right-aligned) */
 .user-message {
-  align-self: flex-end; /* Align to the right */
-  background-color: #4682B4; /* Lighter shade of blue for user messages */
-  color: white; /* Text color for better contrast */
-  padding: 10px;
-  border-radius: 10px;
-  position: relative; /* Position relative to place the timestamp properly */
-}
-
-/* Bot message styling (left-aligned, with a proper background color and padding) */
-.bot-message {
-  align-self: flex-start; /* Align to the left */
-  background-color: #E6E6E6; /* Light gray for bot messages */
+  align-self: flex-end;
+  background-color: #f1f1f1;
   color: black;
   padding: 10px;
-  border-radius: 10px;
-  position: relative; /* Position relative to place the timestamp properly */
+  border-radius: 12px 12px 0 12px;
+  margin-bottom: 8px;
+  max-width: 75%;
+  position: relative;
 }
 
-/* Timestamp styling (for both user and bot messages) */
+/* Bot message styling (left-aligned) */
+.bot-message {
+  align-self: flex-start;
+  background-color: #f1f1f1;
+  color: #333;
+  padding: 10px;
+  border-radius: 12px 12px 12px 0;
+  margin-bottom: 8px;
+  max-width: 75%;
+  position: relative;
+}
+
+/* Message text inside the message */
+.message-text {
+  font-size: 1rem;
+  margin-bottom: 6px;
+}
+
+/* Message footer containing sound icon and timestamp */
+.message-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Sound button styling */
+.sound-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: gray;
+  font-size: 0.75rem;
+  padding: 0;
+}
+
+.sound-btn i {
+  font-size: 0.75rem;
+}
+
+.sound-btn:hover {
+  color: #0053a0;
+}
+
+/* Timestamp styling */
 .timestamp {
-  font-size: 0.8rem;
-  color: #ffffff; /* White timestamp for user messages */
-  position: absolute;
-  bottom: 5px;
-  right: 10px;
+  font-size: 0.75rem;
+  color: gray;
+  text-align: right;
 }
 
-/* Timestamp styling for bot messages (visible on light gray background) */
-.bot-message .timestamp {
-  color: #999999; /* Darker gray for visibility */
-  position: absolute;
-  bottom: 5px;
-  right: 10px;
-}
-
-/* Adjusting margins between message content and timestamp */
-.user-message .timestamp, .bot-message .timestamp {
-  margin-left: 10px; /* Add space between the text and timestamp */
+/* Hidden class */
+.hidden {
+  display: none;
 }
