@@ -1,19 +1,20 @@
 document.addEventListener("DOMContentLoaded", function () {
   const chatIconBtn = document.getElementById("chatIconBtn");
   const chatbotContainer = document.getElementById("chatbotContainer");
-  const closeChat = document.getElementById("closeChat");
   const sendBtn = document.getElementById("sendBtn");
   const userInput = document.getElementById("userInput");
-  const voiceBtn = document.getElementById("voiceBtn");
   const messageContainer = document.getElementById("messageContainer");
 
-  // Function to toggle chatbot visibility
+  // Get the minimize button
+  const closeChatBtn = document.getElementById("closeChat");
+
+  // Function to show the chatbot
   chatIconBtn.addEventListener("click", function () {
-    chatbotContainer.classList.toggle("hidden");
+    chatbotContainer.classList.remove("hidden");
   });
 
-  // Function to close the chat
-  closeChat.addEventListener("click", function () {
+  // Function to hide the chatbot when minimize button is clicked
+  closeChatBtn.addEventListener("click", function () {
     chatbotContainer.classList.add("hidden");
   });
 
@@ -26,29 +27,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Simulate bot response
       setTimeout(() => {
-        addBotMessage("Thank you for your message! How can I assist further?");
+        addBotMessage(
+          "Thank you for your message! How can I assist further?"
+        );
       }, 1000);
     }
   });
-
-  // Voice recognition feature using Web Speech API
-  const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-  recognition.lang = 'en-US';
-  recognition.interimResults = false;
-
-  // Handle voice input
-  voiceBtn.addEventListener("click", function () {
-    recognition.start();
-  });
-
-  // On result (speech recognition complete)
-  recognition.onresult = function (event) {
-    const transcript = event.results[0][0].transcript;
-    addUserMessage(transcript);
-    setTimeout(() => {
-      addBotMessage("Thank you for your voice message! How can I assist further?");
-    }, 1000);
-  };
 
   // Function to handle "Enter" key press to send the message
   userInput.addEventListener("keypress", function (e) {
@@ -57,31 +41,83 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Function to add user message to the chat (right-aligned with timestamp)
+  // Function to add user message to the chat
   function addUserMessage(message) {
     const userMessageDiv = document.createElement("div");
-    userMessageDiv.classList.add("bg-blue-500", "text-white", "p-2", "rounded-lg", "max-w-xs", "self-end", "mb-2", "user-message");
-    userMessageDiv.innerHTML = `${message} <div class="timestamp">${getCurrentTime()}</div>`;
+    userMessageDiv.classList.add("user-message");
+
+    const messageTextDiv = document.createElement("div");
+    messageTextDiv.classList.add("message-text");
+    messageTextDiv.textContent = message;
+
+    const timestampDiv = document.createElement("div");
+    timestampDiv.classList.add("timestamp");
+    timestampDiv.textContent = getCurrentTime();
+
+    userMessageDiv.appendChild(messageTextDiv);
+    userMessageDiv.appendChild(timestampDiv);
     messageContainer.appendChild(userMessageDiv);
 
     // Auto-scroll to the bottom when a new message is added
     messageContainer.scrollTop = messageContainer.scrollHeight;
   }
 
-  // Function to simulate bot response (left-aligned with timestamp)
+  // Function to add bot message to the chat with sound icon
   function addBotMessage(message) {
     const botMessageDiv = document.createElement("div");
-    botMessageDiv.classList.add("bg-gray-200", "p-2", "rounded-lg", "max-w-xs", "self-start", "mb-2", "bot-message");
-    botMessageDiv.innerHTML = `${message} <div class="timestamp">${getCurrentTime()}</div>`;
+    botMessageDiv.classList.add("bot-message");
+
+    const messageTextDiv = document.createElement("div");
+    messageTextDiv.classList.add("message-text");
+    messageTextDiv.textContent = message;
+
+    // Create the message footer
+    const messageFooterDiv = document.createElement("div");
+    messageFooterDiv.classList.add("message-footer");
+
+    // Create the sound button
+    const soundBtn = document.createElement("button");
+    soundBtn.classList.add("sound-btn");
+    soundBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+
+    // Add event listener to the sound button for text-to-speech
+    soundBtn.addEventListener("click", function () {
+      speakText(message);
+    });
+
+    // Create the timestamp
+    const timestampDiv = document.createElement("div");
+    timestampDiv.classList.add("timestamp");
+    timestampDiv.textContent = getCurrentTime();
+
+    // Append sound button and timestamp to the footer
+    messageFooterDiv.appendChild(soundBtn);
+    messageFooterDiv.appendChild(timestampDiv);
+
+    // Append message text and footer to the bot message div
+    botMessageDiv.appendChild(messageTextDiv);
+    botMessageDiv.appendChild(messageFooterDiv);
     messageContainer.appendChild(botMessageDiv);
 
     // Auto-scroll to the bottom when a new message is added
     messageContainer.scrollTop = messageContainer.scrollHeight;
   }
 
-  // Helper function to get the current time for timestamps
+  // Function to perform text-to-speech
+  function speakText(text) {
+    if ("speechSynthesis" in window) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      window.speechSynthesis.speak(utterance);
+    } else {
+      alert("Sorry, your browser doesn't support text-to-speech.");
+    }
+  }
+
+  // Helper function to get the current time
   function getCurrentTime() {
     const now = new Date();
-    return now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
+    return (
+      now.getHours() + ":" + String(now.getMinutes()).padStart(2, "0")
+    );
   }
 });
