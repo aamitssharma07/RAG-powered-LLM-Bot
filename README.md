@@ -61,6 +61,4 @@ This project integrates the latest advancements in natural language understandin
 - **User Feedback**: Implement a feedback mechanism for users to rate the bot's responses for continuous improvement.
 
 
----
 
-For more details on the project objectives, literature review, and detailed workflow, refer to the attached [Project Proposal Writeup](Team%203%20-%20Project%20Proposal%20WriteUp.docx) and [Presentation](Team%203%20-%20Project%20Proposal%20Presentation.pptx).
