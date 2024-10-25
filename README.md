@@ -21,7 +21,7 @@ This project integrates the latest advancements in natural language understandin
 - **FAQ Dataset Handling**: Collects, preprocesses, and vectorizes FAQ data for semantic matching.
 - **RAG Integration**: Retrieves the most relevant FAQ entries and uses the LLM for response generation.
 - **Context Retention**: Supports multi-turn conversations by maintaining context across the interaction.
-- **Text-to-Speech**: Converts the bot's response to audio for a better user experience.
+- **Text-to-Speech**: Along with text also give the bot's response to audio for a better user experience.
 - **Voice Input**: Allows users to input queries through voice using Web Speech API.
 
 ## Project Structure
@@ -51,19 +51,15 @@ This project integrates the latest advancements in natural language understandin
 ## Usage
 
 - **Sending Messages**: Type a message or speak using the voice input button, and the chatbot will respond.
-- **Voice Output**: Bot responses can be played as audio by clicking the volume icon in the chatbot's response.
+- **Text and Voice Output**: Bot responses can be text and audio, which can be played by clicking the volume icon in the chatbot's response.
 - **Multi-Turn Conversations**: You can ask follow-up questions, and the chatbot will maintain the context of the conversation.
 
 ## Future Enhancements
 
 - **Improve Retrieval Accuracy**: Fine-tune semantic matching for more nuanced queries.
-- **LLM Integration**: Enhance the LLM's response generation to include additional context or clarification.
 - **Scalability**: Optimize the vector database for larger datasets and faster retrieval.
 - **User Feedback**: Implement a feedback mechanism for users to rate the bot's responses for continuous improvement.
 
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ---
 
