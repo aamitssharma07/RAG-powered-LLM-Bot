@@ -59,7 +59,7 @@ This project integrates the latest advancements in natural language understandin
 - **Improve Retrieval Accuracy**: Fine-tune semantic matching for more nuanced queries.
 - **Scalability**: Optimize the vector database for larger datasets and faster retrieval.
 - **API Creation and Integration**: Create an API for the backend and then integrate it with the front end.
-- **Deployment**: Once the front end is integrated with the backend then we will deploy the project on live server.
+- **Deployment**: Once the back end is integrated with the front end then we will deploy the project on the live server.
 
 
 
