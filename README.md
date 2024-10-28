@@ -14,7 +14,7 @@ This project is an intelligent FAQ chatbot that combines Retrieval-Augmented Gen
 This project integrates the latest advancements in natural language understanding with dynamic information retrieval to improve FAQ handling. The key features include:
 - **RAG Integration**: Combining retrieval techniques with LLMs for contextual responses.
 - **Vector Database**: Storing and querying vector embeddings for fast, semantic matching.
-- **User Experience**: Providing a conversational and personalized experience for users.
+- **User Experience**: Providing a conversational and personalized user experience.
 
 ## Features
 
@@ -33,7 +33,7 @@ This project integrates the latest advancements in natural language understandin
 ## Tech Stack
 
 - **Frontend**: HTML, CSS, JavaScript, Tailwind CSS
-- **Backend**: Retrieval-augmented generation (RAG) with a vector database and Large Language Model (LLM) for dynamic responses.
+- **Backend**: Langchain, Retrieval-augmented generation (RAG) with a vector database and Large Language Model (LLM) for dynamic responses.
 - **APIs**: Web Speech API for voice input and speech synthesis.
 
 ## Installation
@@ -51,14 +51,15 @@ This project integrates the latest advancements in natural language understandin
 ## Usage
 
 - **Sending Messages**: Type a message or speak using the voice input button, and the chatbot will respond.
-- **Text and Voice Output**: Bot generated both text and audio responses, which can be played by clicking the volume icon in the chatbot's response.
+- **Text and Voice Output**: The bot generated both text and audio responses, which can be played by clicking the volume icon in the chatbot's response.
 - **Multi-Turn Conversations**: You can ask follow-up questions, and the chatbot will maintain the context of the conversation.
 
 ## Future Enhancements
 
 - **Improve Retrieval Accuracy**: Fine-tune semantic matching for more nuanced queries.
 - **Scalability**: Optimize the vector database for larger datasets and faster retrieval.
-- **User Feedback**: Implement a feedback mechanism for users to rate the bot's responses for continuous improvement.
+- **API Creation and Integration**: Create an API for the backend and then integrate it with the front end.
+- **Deployment**: Once the front end is integrated with the backend then we will deploy the project on live server.
 
 
 
