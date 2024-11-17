@@ -1,0 +1,233 @@
+/* dark_mode.css */
+
+/* General body background styling with background image */
+body {
+  background-image: url('images/dark.jpg'); /* Dark mode background image */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  color: #f0f0f0; /* Bright text color for dark mode */
+}
+
+/* Chatbot window styling */
+#chatbotContainer {
+  max-width: 400px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  overflow: hidden;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  height: 500px;
+  background-color: #2b2b2b;
+}
+
+/* Chat Header */
+#chatbotContainer .bg-blue-500 {
+  background-color: #0053a0;
+}
+
+#chatbotContainer h1 {
+  color: #ffffff;
+}
+
+/* Input Container Styling */
+.input-container {
+  position: relative;
+  width: 100%;
+}
+
+/* Input Field Styling */
+.input-field {
+  width: 100%;
+  font-size: 1rem;
+  padding: 12px;
+  border: 1px solid #0053a0;
+  border-radius: 8px;
+  outline: none;
+  background-color: #3a3a3a;
+  color: #ffffff;
+}
+
+.input-field::placeholder {
+  color: transparent;
+}
+
+.input-field:focus {
+  border-color: #007bff;
+}
+
+/* Floating Label Styling */
+.input-label {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: 0.2s ease all;
+  font-size: 1rem;
+  color: #cccccc;
+  pointer-events: none;
+}
+
+.input-field:focus + .input-label,
+.input-field:not(:placeholder-shown) + .input-label {
+  top: -1.5em; /* Adjusted to add space between label and input field */
+  transform: translateY(0);
+  font-size: 0.9rem;
+  color: #ffffff;
+}
+
+/* Send Button Styling */
+.send-btn {
+  height: 48px;
+  width: 48px;
+  background-color: #0053a0;
+  color: white;
+  border: 1px solid #0053a0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.send-btn:hover {
+  background-color: #007bff;
+}
+
+/* Chat message container */
+#messageContainer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Bot Message Styling */
+.bot-message-container {
+  display: flex;
+  align-items: flex-end; /* Aligned at the bottom */
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.bot-message {
+  background-color: #3a3a3a; /* Dark gray background for bot messages */
+  color: #ffffff; /* White text */
+  padding: 10px;
+  border-radius: 12px;
+  max-width: 75%;
+}
+
+.message-text {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Ensure that images inside .bot-message are not displayed */
+.bot-message img {
+  display: none;
+}
+
+/* User Message Styling */
+.user-message-container {
+  display: flex;
+  align-items: flex-end; /* Aligned at the bottom */
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.user-message {
+  background-color: #3a3a3a;
+  color: #ffffff;
+  padding: 10px;
+  border-radius: 12px;
+  max-width: 75%;
+}
+
+/* Avatar Styling */
+.bot-logo {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #007bff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+}
+
+/* Timestamp Styling */
+.timestamp {
+  font-size: 0.75rem;
+  color: #bbb;
+}
+
+.user-timestamp {
+  font-size: 0.75rem;
+  color: #bbb;
+  margin-left: auto;
+}
+
+/* Message footer container styling */
+.message-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.feedback-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Temporary Message Styling */
+.temporary-message {
+  padding: 8px;
+  border-radius: 5px;
+  margin-top: 8px;
+  max-width: 80%;
+  font-size: 0.85rem;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  #chatbotContainer {
+    width: 90%;
+    right: 5%;
+    bottom: 10px;
+    height: 80%;
+  }
+
+  .message-text {
+    max-width: 80%;
+    padding: 8px 12px;
+    font-size: 0.95rem;
+  }
+
+  .send-btn {
+    height: 40px;
+    width: 40px;
+  }
+
+  .bot-logo,
+  .user-avatar {
+    width: 25px;
+    height: 25px;
+  }
+}
+
+/* Chat Icon Color Adjustment for Dark Mode */
+.chat-icon {
+  filter: brightness(0) saturate(100%) invert(95%) sepia(0%) saturate(0%) hue-rotate(340deg) brightness(100%) contrast(101%);
+}
