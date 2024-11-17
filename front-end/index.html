@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Smart Assist</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- FontAwesome for additional icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  
+  <!-- Material Symbols Outlined -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=chat_bubble" />
+  
+  <!-- Light and Dark Mode CSS -->
+  <link id="lightModeStylesheet" rel="stylesheet" href="light_mode.css">
+  <link id="darkModeStylesheet" rel="stylesheet" href="dark_mode.css" disabled>
+  
+  <!-- Avatar and Logo Styling -->
+  <link rel="stylesheet" href="avatars.css">
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col justify-center items-center">
+
+  <!-- Chat Icon Button with Custom Image -->
+  <button id="chatIconBtn" class="fixed bottom-8 right-8 bg-gradient-to-r from-blue-500 to-purple-600 p-4 rounded-full shadow-lg hover:from-purple-600 hover:to-blue-500 transition-transform transform hover:scale-110 focus:outline-none">
+    <!-- Replaced Material Symbol with Custom Image and Added 'chat-icon' Class -->
+    <img src="images/chat_bubble_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.png" alt="Chatbot Icon" class="h-6 w-6 chat-icon">
+    
+    <!-- Notification Badge -->
+    <span class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">3</span>
+  </button>
+
+  <!-- Chatbot Container -->
+  <div id="chatbotContainer" class="hidden bg-white shadow-lg rounded-lg w-full max-w-sm fixed bottom-16 right-8 flex flex-col">
+    <!-- Chat Header -->
+    <div class="bg-blue-500 text-white rounded-t-lg flex items-center px-4 h-16 relative">
+      <!-- Theme Toggle Button -->
+      <button id="themeToggleBtn" class="text-white mr-4" aria-label="Toggle Theme">
+        <i class="fas fa-moon text-xl"></i>
+      </button>
+      <div class="flex items-center flex-1 justify-center">
+        <i class="fas fa-robot text-white text-2xl mr-2"></i>
+        <h1 class="text-xl font-bold">Smart Assist</h1>
+      </div>
+      <!-- Minimize Chat Button -->
+      <button id="closeChat" class="close-chat-btn text-white" aria-label="Minimize Chat">
+        <i class="fas fa-minus text-lg"></i>
+      </button>
+    </div>
+
+    <!-- Chat messages will appear here -->
+    <div id="messageContainer" class="p-4 space-y-2 overflow-y-auto flex-1"></div>
+
+    <!-- Chat Input Area -->
+    <div class="p-4 flex items-center border-t">
+      <div class="input-container relative w-full">
+        <input id="userInput" type="text" class="input-field w-full border pl-3 focus:outline-none" placeholder=" "/>
+        <label for="userInput" class="input-label absolute left-5 text-grey-500 transition-all">Type your message</label>
+      </div>
+      <button id="sendBtn" class="send-btn flex items-center justify-center ml-2">
+        <i class="fas fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Include your JavaScript file -->
+  <script src="app.js"></script>
+</body>
+</html>
