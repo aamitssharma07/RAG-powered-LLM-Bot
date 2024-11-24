@@ -1,0 +1,517 @@
+/* styles.css */
+
+/* ----------------------------
+   CSS Variables for Theming
+----------------------------- */
+
+/* Default (Light) Theme Variables */
+:root {
+  --background-image: url('images/sunny.jpg');
+  --background-color: #ffffff;
+  --text-color: #333333;
+  --chatbot-background: #ffffff;
+  --chat-header-bg: #0053a0;
+  --chat-header-text: #ffffff;
+  --input-background: #f9f9f9;
+  --input-border: #0053a0;
+  --input-text: #333333;
+  --input-label-color: #888888;
+  --send-btn-bg: #0053a0;
+  --send-btn-hover-bg: #007bff;
+  --bot-message-bg: rgb(222, 222, 222);
+  --user-message-bg: rgb(222, 222, 222);
+  --timestamp-color: black;
+  --feedback-like-bg: #e0f7e9;
+  --feedback-like-color: #00796b;
+  --feedback-dislike-bg: #fdecea;
+  --feedback-dislike-color: #c62828;
+  --chat-icon-filter: brightness(0) saturate(100%) invert(19%) sepia(86%) saturate(680%) hue-rotate(220deg) brightness(93%) contrast(88%);
+}
+
+/* Dark Theme Variables */
+body.dark-mode {
+  --background-image: url('images/dark.jpg');
+  --background-color: #2b2b2b;
+  --text-color: #f0f0f0;
+  --chatbot-background: #2b2b2b;
+  --chat-header-bg: #0053a0;
+  --chat-header-text: #ffffff;
+  --input-background: #3a3a3a;
+  --input-border: #0053a0;
+  --input-text: #ffffff;
+  --input-label-color: #cccccc;
+  --send-btn-bg: #0053a0;
+  --send-btn-hover-bg: #007bff;
+  --bot-message-bg: #3a3a3a;
+  --user-message-bg: #3a3a3a;
+  --timestamp-color: #bbb;
+  --feedback-like-bg: #e0f7e9;
+  --feedback-like-color: #00796b;
+  --feedback-dislike-bg: #fdecea;
+  --feedback-dislike-color: #c62828;
+  --chat-icon-filter: brightness(0) saturate(100%) invert(95%) sepia(0%) saturate(0%) hue-rotate(340deg) brightness(100%) contrast(101%);
+}
+
+/* ----------------------------
+   Global Styles
+----------------------------- */
+
+body {
+  background-image: var(--background-image);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  color: var(--text-color);
+  font-family: Arial, sans-serif;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.hidden {
+  display: none;
+}
+
+/* ----------------------------
+   Avatar Styles
+----------------------------- */
+
+/* Bot logo styling */
+.bot-logo {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* User avatar styling */
+.user-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #007bff; /* Light mode default */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+  transition: background-color 0.3s;
+}
+
+body.dark-mode .user-avatar {
+  background-color: #3f51b5; /* Dark mode avatar color */
+}
+
+/* Responsive Avatar Styling */
+@media (max-width: 600px) {
+  .bot-logo,
+  .user-avatar {
+    width: 25px;
+    height: 25px;
+  }
+}
+
+/* ----------------------------
+   Chatbot Container Styles
+----------------------------- */
+
+/* Chat Status Styling */
+#chatStatus {
+  background-color: var(--chatbot-background);
+  border-bottom: 1px solid #e5e5e5; /* Subtle bottom border */
+  text-align: center;
+  color: var(--text-color);
+}
+
+/* Chatbot Container */
+#chatbotContainer {
+  max-width: 400px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  position: fixed;
+  bottom: 16px; /* Slightly above the chat icon */
+  right: 8px;
+  height: 600px;
+  background-color: var(--chatbot-background);
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+body.dark-mode #chatbotContainer {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* Chat Header */
+#chatbotContainer .bg-blue-500 {
+  background-color: var(--chat-header-bg);
+}
+
+#chatbotContainer h1 {
+  color: var(--chat-header-text);
+}
+
+/* ----------------------------
+ Chat Messages Styles
+----------------------------- */
+
+/* Chat message container */
+#messageContainer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Bot Message Styling */
+.bot-message-container {
+  display: flex;
+  align-items: flex-end; /* Aligned at the bottom */
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.bot-message {
+  background-color: var(--bot-message-bg);
+  color: var(--text-color);
+  padding: 10px;
+  border-radius: 12px;
+  max-width: 75%;
+}
+
+.message-text {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Ensure that images inside .bot-message are not displayed */
+.bot-message img {
+  display: none;
+}
+
+/* User Message Styling */
+.user-message-container {
+  display: flex;
+  align-items: flex-end; /* Aligned at the bottom */
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.user-message {
+  background-color: var(--user-message-bg);
+  color: var(--text-color);
+  padding: 10px;
+  border-radius: 12px;
+  max-width: 75%;
+}
+
+/* Timestamp Styling */
+.timestamp,
+.user-timestamp {
+  font-size: 0.75rem;
+  color: var(--timestamp-color);
+}
+
+.user-timestamp {
+  margin-left: auto;
+}
+
+/* Message footer container styling */
+.message-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.feedback-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Temporary Message Styling */
+.temporary-message {
+  padding: 8px;
+  border-radius: 5px;
+  margin-top: 8px;
+  max-width: 80%;
+  font-size: 0.85rem;
+  animation: fadeOut 4s forwards;
+}
+
+/* Animation for Temporary Messages */
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ----------------------------
+ Input Area Styles
+----------------------------- */
+
+/* Input Container Styling */
+.input-container {
+  position: relative;
+  width: 100%;
+}
+
+/* Input Field Styling */
+.input-field {
+  width: 100%;
+  font-size: 1rem;
+  padding: 12px;
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  outline: none;
+  background-color: var(--input-background);
+  color: var(--input-text);
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.input-field::placeholder {
+  color: transparent;
+}
+
+.input-field:focus {
+  border-color: #007bff; /* Focus border color remains consistent */
+}
+
+/* Floating Label Styling */
+.input-label {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: 0.2s ease all;
+  font-size: 1rem;
+  color: var(--input-label-color);
+  pointer-events: none;
+}
+
+.input-field:focus + .input-label,
+.input-field:not(:placeholder-shown) + .input-label {
+  top: -1.5em; /* Adjusted to add space between label and input field */
+  transform: translateY(0);
+  font-size: 0.9rem;
+  color: var(--input-text);
+}
+
+/* Send Button Styling */
+.send-btn {
+  height: 48px;
+  width: 48px;
+  background-color: var(--send-btn-bg);
+  color: white;
+  border: 1px solid var(--send-btn-bg);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.send-btn:hover {
+  background-color: var(--send-btn-hover-bg);
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  #chatbotContainer {
+    width: 90%;
+    right: 5%;
+    bottom: 10px;
+    height: 80%;
+  }
+
+  .message-text {
+    max-width: 80%;
+    padding: 8px 12px;
+    font-size: 0.95rem;
+  }
+
+  .send-btn {
+    height: 40px;
+    width: 40px;
+  }
+
+  .bot-logo,
+  .user-avatar {
+    width: 25px;
+    height: 25px;
+  }
+}
+
+/* ----------------------------
+ Chat Icon Styles
+----------------------------- */
+
+/* Chat Icon Button */
+#chatIconBtn {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6);
+  padding: 16px;
+  border-radius: 50%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 1000;
+}
+
+#chatIconBtn:hover {
+  transform: scale(1.1);
+}
+
+/* Chat Icon Image */
+.chat-icon {
+  height: 24px;
+  width: 24px;
+  filter: var(--chat-icon-filter);
+  transition: filter 0.3s;
+}
+
+/* Notification Badge */
+#chatIconBtn .badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25em 0.5em;
+  font-size: 0.75rem;
+  font-weight: bold;
+  line-height: 1;
+  color: #fefefe;
+  background-color: #dc2626;
+  border-radius: 9999px;
+}
+
+/* ----------------------------
+ Miscellaneous Styles
+----------------------------- */
+
+/* Adjustments for Tailwind Classes if Necessary */
+/* You can add custom styles here if Tailwind classes need to be overridden */
+
+/* ----------------------------
+ Thumbs Up and Thumbs Down Button Styling
+----------------------------- */
+
+/* Base Styles for Thumbs Up and Thumbs Down Buttons */
+.thumbs-up,
+.thumbs-down {
+    background: none; /* Removes default button background */
+    border: none; /* Removes default button border */
+    cursor: pointer; /* Changes cursor to pointer on hover */
+    font-size: 1.2rem; /* Sets the size of the icon */
+    color: var(--timestamp-color); /* Sets initial color based on theme */
+    transition: color 0.3s, opacity 0.3s, transform 0.3s; /* Smooth transitions */
+    padding: 4px; /* Adds some padding for better click area */
+    border-radius: 4px; /* Slightly rounds the corners */
+}
+
+/* Hover Effects for Thumbs Up and Thumbs Down Buttons */
+.thumbs-up:hover,
+.thumbs-down:hover {
+    opacity: 0.7; /* Reduces opacity on hover for visual feedback */
+    transform: scale(1.1); /* Slightly enlarges the icon on hover */
+}
+
+/* Active/Clicked State for Thumbs Up and Thumbs Down Buttons */
+.thumbs-up:active,
+.thumbs-down:active {
+    transform: scale(0.95); /* Slightly shrinks the icon when clicked */
+}
+
+/* Disabled State for Thumbs Up and Thumbs Down Buttons */
+.thumbs-up:disabled,
+.thumbs-down:disabled {
+    cursor: not-allowed; /* Changes cursor to indicate disabled state */
+    opacity: 0.5; /* Reduces opacity to show disabled state */
+}
+
+/* Optional: Icon Color Based on Feedback Type */
+
+/* Green Color for Thumbs Up */
+.thumbs-up.active {
+    color: #28a745; /* Bootstrap success green */
+}
+
+/* Red Color for Thumbs Down */
+.thumbs-down.active {
+    color: #dc3545; /* Bootstrap danger red */
+}
+
+/* ----------------------------
+ Toast Container and Toast Message Styling
+----------------------------- */
+
+/* New: Toast Container Styling Within Each Bot Message */
+.bot-message-container .toast-container {
+    margin-top: 8px; /* Space between message and toast */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align toasts to the start (left) */
+    gap: 8px;
+}
+
+/* New: Toast Message Styling */
+.message-toast {
+    min-width: 200px;
+    max-width: 300px;
+    padding: 10px 14px;
+    background-color: #333333; /* Default dark background, can be overridden inline */
+    color: #ffffff; /* Default white text, can be overridden inline */
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+    pointer-events: none; /* Allows clicks to pass through */
+}
+
+/* Fade-Out Effect for Toast */
+.message-toast.fade-out {
+    opacity: 0;
+}
+
+/* ----------------------------
+ Material Symbols Outlined Styling
+----------------------------- */
+
+.material-symbols-outlined {
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+  /* Ensures the icon inherits the current text color */
+  color: inherit;
+}
+
+/* ----------------------------
+ Header Button Styling
+----------------------------- */
+
+/* Header Button Common Styles */
+.header-btn {
+  height: 40px; /* Set a uniform height */
+  width: 40px;  /* Set a uniform width */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.header-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2); /* Light hover effect */
+  transform: scale(1.05);
+}
+
+.header-btn:active {
+  transform: scale(0.95);
+}
