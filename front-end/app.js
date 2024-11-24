@@ -1,4 +1,10 @@
+// app.js
+
 document.addEventListener("DOMContentLoaded", function () {
+  // ----------------------------
+  // Element Selection
+  // ----------------------------
+
   const chatIconBtn = document.getElementById("chatIconBtn");
   const chatbotContainer = document.getElementById("chatbotContainer");
   const closeChatBtn = document.getElementById("closeChat");
@@ -6,74 +12,140 @@ document.addEventListener("DOMContentLoaded", function () {
   const sendBtn = document.getElementById("sendBtn");
   const userInput = document.getElementById("userInput");
   const messageContainer = document.getElementById("messageContainer");
+  const chatStatus = document.getElementById("chatStatus"); // Chat Status Section
+  const downloadBtn = document.getElementById("downloadChatBtn"); // Download Transcript Button
 
-  // Paths to avatar and logo images
-  const BOT_AVATAR_LIGHT = "images/logo.jpg"; // Path to your bot's logo for light mode
-  const BOT_AVATAR_DARK = "images/logo.jpg"; // Use the same logo if a dark version is not available
+  // ----------------------------
+  // Asset Paths
+  // ----------------------------
 
-  const USER_AVATAR_ICON = '<i class="fa-solid fa-user"></i>'; // FontAwesome icon for user avatar
+  const BOT_AVATAR_LIGHT = "images/logo.jpg"; // Bot Avatar for Light Mode
+  const BOT_AVATAR_DARK = "images/logo.jpg"; // Bot Avatar for Dark Mode
+  const USER_AVATAR_ICON = '<i class="fa-solid fa-user"></i>'; // FontAwesome User Icon
 
-  // Debugging: Verify that all elements are correctly selected
-  console.log("chatIconBtn:", chatIconBtn);
-  console.log("chatbotContainer:", chatbotContainer);
-  console.log("closeChatBtn:", closeChatBtn);
-  console.log("toggleButton:", toggleButton);
-  console.log("sendBtn:", sendBtn);
-  console.log("userInput:", userInput);
-  console.log("messageContainer:", messageContainer);
+  // ----------------------------
+  // Utility: Format Current Time
+  // ----------------------------
 
-  // Function to show the chatbot
-  function showChatbot() {
-    chatbotContainer.classList.remove("hidden");
-    console.log("Chatbot opened.");
+  function formatCurrentTime() {
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+    const amPm = hours >= 12 ? "PM" : "AM";
+    return `${hours % 12 || 12}:${minutes} ${amPm}`;
   }
 
-  // Function to hide the chatbot
-  function hideChatbot() {
-    chatbotContainer.classList.add("hidden");
-    console.log("Chatbot minimized.");
+  // ----------------------------
+  // Theme Persistence on Load
+  // ----------------------------
+
+  function setThemeOnLoad() {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      document.body.classList.add("dark-mode");
+      toggleButton.innerHTML = '<i class="fas fa-sun text-xl"></i>';
+      updateBotAvatars("dark");
+    } else {
+      document.body.classList.remove("dark-mode");
+      toggleButton.innerHTML = '<i class="fas fa-moon text-xl"></i>';
+      updateBotAvatars("light");
+    }
   }
 
-  // Event listener for the chat icon to open the chatbot
-  if (chatIconBtn) {
-    chatIconBtn.addEventListener("click", showChatbot);
-    console.log("Chat icon event listener attached.");
-  } else {
-    console.error("chatIconBtn is null. Check the element ID in HTML.");
+  function updateBotAvatars(mode) {
+    const botAvatars = document.querySelectorAll(".bot-logo");
+    botAvatars.forEach((avatar) => {
+      avatar.src = mode === "dark" ? BOT_AVATAR_DARK : BOT_AVATAR_LIGHT;
+    });
   }
 
-  // Event listener for the minimize button to close the chatbot
-  if (closeChatBtn) {
-    closeChatBtn.addEventListener("click", hideChatbot);
-    console.log("Minimize button event listener attached.");
-  } else {
-    console.error("closeChatBtn is null. Check the element ID in HTML.");
-  }
+  setThemeOnLoad();
 
-  // Toggle light and dark mode with sun/moon icon switch
+  // ----------------------------
+  // Theme Toggle Functionality
+  // ----------------------------
+
   if (toggleButton) {
     toggleButton.addEventListener("click", function () {
       document.body.classList.toggle("dark-mode");
-      const lightModeStylesheet = document.getElementById("lightModeStylesheet");
-      const darkModeStylesheet = document.getElementById("darkModeStylesheet");
+      const mode = document.body.classList.contains("dark-mode") ? "dark" : "light";
 
-      if (document.body.classList.contains("dark-mode")) {
-        lightModeStylesheet.disabled = true;
-        darkModeStylesheet.disabled = false;
-        toggleButton.innerHTML = '<i class="fas fa-sun text-xl"></i>'; // Show sun icon in dark mode
-        console.log("Switched to dark mode.");
-      } else {
-        lightModeStylesheet.disabled = false;
-        darkModeStylesheet.disabled = true;
-        toggleButton.innerHTML = '<i class="fas fa-moon text-xl"></i>'; // Show moon icon in light mode
-        console.log("Switched to light mode.");
-      }
+      toggleButton.innerHTML =
+        mode === "dark" ? '<i class="fas fa-sun text-xl"></i>' : '<i class="fas fa-moon text-xl"></i>';
+      localStorage.setItem("theme", mode);
+      updateBotAvatars(mode);
     });
-  } else {
-    console.error("toggleButton is null. Check the element ID in HTML.");
   }
 
-  // Event listener for send button
+  // ----------------------------
+  // Chatbot Open Functionality
+  // ----------------------------
+
+  function showChatbot() {
+    chatbotContainer.classList.remove("hidden");
+    chatIconBtn.classList.add("hidden");
+
+    // Update Chat Status
+    if (chatStatus) {
+      const startTime = formatCurrentTime();
+      chatStatus.innerHTML = `
+        Chat started at ${startTime}<br>
+        You are chatting with SmartAssist
+      `;
+    }
+
+    // Add Welcome Message if it hasn't been shown yet
+    if (!messageContainer.hasChildNodes()) {
+      addWelcomeMessage();
+    }
+  }
+
+  // ----------------------------
+  // Chatbot Close Functionality
+  // ----------------------------
+
+  function hideChatbot() {
+    chatbotContainer.classList.add("hidden");
+    chatIconBtn.classList.remove("hidden");
+  }
+
+  // ----------------------------
+  // Function: Add Welcome Message
+  // ----------------------------
+
+  function addWelcomeMessage() {
+    const welcomeMessage1 = "Welcome User. I'm your virtual assistant SmartAssist, and I'm here to help you with all your Credit Card related questions.";
+    const welcomeMessage2 = "Do you maybe have a question about an existing card or transaction?";
+    
+    // First welcome message
+    addBotMessage(welcomeMessage1);
+    
+    // Second follow-up message
+    setTimeout(() => {
+      addBotMessage(welcomeMessage2);
+    }, 1000); // Add a slight delay for the second message
+  }
+
+  // ----------------------------
+  // Event Listeners: Open/Close Chatbot
+  // ----------------------------
+
+  if (chatIconBtn) {
+    chatIconBtn.addEventListener("click", function () {
+      showChatbot();
+    });
+  }
+
+  if (closeChatBtn) {
+    closeChatBtn.addEventListener("click", function () {
+      hideChatbot();
+    });
+  }
+
+  // ----------------------------
+  // Send Message Functionality
+  // ----------------------------
+
   if (sendBtn && userInput) {
     sendBtn.addEventListener("click", function () {
       const message = userInput.value.trim();
@@ -84,36 +156,170 @@ document.addEventListener("DOMContentLoaded", function () {
         // Show typing indicator
         showTypingIndicator();
 
+        // Simulate bot response
         setTimeout(() => {
           hideTypingIndicator();
           addBotMessage("Thank you for your message! How can I assist further?");
         }, 1000);
       }
     });
-    console.log("Send button event listener attached.");
-  } else {
-    console.error("sendBtn or userInput is null. Check the element IDs in HTML.");
   }
 
-  // Allow sending message with Enter key
+  // Send message on Enter key
   if (userInput) {
     userInput.addEventListener("keypress", function (e) {
       if (e.key === "Enter") {
-        e.preventDefault(); // Prevent newline in the input
+        e.preventDefault();
         sendBtn.click();
-        console.log("Enter key pressed. Message sent.");
       }
     });
   }
 
-  // Function to show typing indicator
+  // ----------------------------
+  // Function: Add User Message
+  // ----------------------------
+
+  function addUserMessage(message) {
+    const userMessageContainer = document.createElement("div");
+    userMessageContainer.classList.add("user-message-container");
+
+    const userAvatarDiv = document.createElement("div");
+    userAvatarDiv.classList.add("user-avatar");
+    userAvatarDiv.innerHTML = USER_AVATAR_ICON;
+
+    const userMessageDiv = document.createElement("div");
+    userMessageDiv.classList.add("user-message");
+
+    const messageTextDiv = document.createElement("div");
+    messageTextDiv.classList.add("message-text");
+    messageTextDiv.textContent = message;
+
+    const timestampDiv = document.createElement("div");
+    timestampDiv.classList.add("user-timestamp");
+    timestampDiv.textContent = formatCurrentTime();
+
+    userMessageDiv.appendChild(messageTextDiv);
+    userMessageDiv.appendChild(timestampDiv);
+
+    userMessageContainer.appendChild(userMessageDiv);
+    userMessageContainer.appendChild(userAvatarDiv);
+
+    messageContainer.appendChild(userMessageContainer);
+    messageContainer.scrollTop = messageContainer.scrollHeight;
+  }
+
+  // ----------------------------
+  // Function: Add Bot Message
+  // ----------------------------
+
+  function addBotMessage(message, type = 'text', quickReplies = []) {
+    const botMessageContainer = document.createElement("div");
+    botMessageContainer.classList.add("bot-message-container");
+
+    const avatarImg = document.createElement("img");
+    avatarImg.src = document.body.classList.contains("dark-mode")
+      ? BOT_AVATAR_DARK
+      : BOT_AVATAR_LIGHT;
+    avatarImg.alt = "Bot Avatar";
+    avatarImg.classList.add("bot-logo");
+
+    const botMessageDiv = document.createElement("div");
+    botMessageDiv.classList.add("bot-message");
+
+    let messageContent;
+    if (type === 'image') {
+      messageContent = document.createElement("img");
+      messageContent.src = message;
+      messageContent.alt = "Image from Smart Assist";
+      messageContent.classList.add("bot-image");
+    } else if (type === 'video') {
+      messageContent = document.createElement("video");
+      messageContent.src = message;
+      messageContent.controls = true;
+      messageContent.classList.add("bot-video");
+    } else if (type === 'link') {
+      messageContent = document.createElement("a");
+      messageContent.href = message;
+      messageContent.textContent = "Click here";
+      messageContent.target = "_blank";
+      messageContent.classList.add("bot-link");
+    } else {
+      messageContent = document.createElement("div");
+      messageContent.classList.add("message-text");
+      messageContent.textContent = message;
+    }
+
+    botMessageDiv.appendChild(messageContent);
+
+    // Feedback Buttons
+    const feedbackDiv = document.createElement("div");
+    feedbackDiv.classList.add("feedback-buttons");
+
+    const soundBtn = document.createElement("button");
+    soundBtn.classList.add("sound-btn");
+    soundBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+    soundBtn.addEventListener("click", function () {
+      speakText(message);
+    });
+
+    const thumbsUp = document.createElement("button");
+    thumbsUp.classList.add("thumbs-up");
+    thumbsUp.innerHTML = '<i class="fas fa-thumbs-up"></i>';
+    thumbsUp.addEventListener("click", function () {
+      thumbsUp.style.color = "green";
+      thumbsDown.style.color = "";
+      showTemporaryMessage("Thank you for your feedback!", "like", botMessageContainer);
+    });
+
+    const thumbsDown = document.createElement("button");
+    thumbsDown.classList.add("thumbs-down");
+    thumbsDown.innerHTML = '<i class="fas fa-thumbs-down"></i>';
+    thumbsDown.addEventListener("click", function () {
+      thumbsDown.style.color = "red";
+      thumbsUp.style.color = "";
+      showTemporaryMessage("I'm sorry to hear that. I'll improve.", "dislike", botMessageContainer);
+    });
+
+    feedbackDiv.appendChild(soundBtn);
+    feedbackDiv.appendChild(thumbsUp);
+    feedbackDiv.appendChild(thumbsDown);
+
+    const timestampDiv = document.createElement("div");
+    timestampDiv.classList.add("timestamp");
+    timestampDiv.textContent = formatCurrentTime();
+
+    const messageFooter = document.createElement("div");
+    messageFooter.classList.add("message-footer");
+
+    messageFooter.appendChild(feedbackDiv);
+    messageFooter.appendChild(timestampDiv);
+
+    botMessageDiv.appendChild(messageFooter);
+
+    // ----------------------------
+    // New: Toast Container for This Bot Message
+    // ----------------------------
+    const toastContainer = document.createElement("div");
+    toastContainer.classList.add("toast-container");
+    botMessageDiv.appendChild(toastContainer);
+
+    botMessageContainer.appendChild(avatarImg);
+    botMessageContainer.appendChild(botMessageDiv);
+
+    messageContainer.appendChild(botMessageContainer);
+    messageContainer.scrollTop = messageContainer.scrollHeight;
+  }
+
+  // ----------------------------
+  // Function: Typing Indicator
+  // ----------------------------
+
   function showTypingIndicator() {
-    // Check if typing indicator already exists to prevent duplicates
     if (document.getElementById("typingIndicator")) return;
 
     const botMessageContainer = document.createElement("div");
     botMessageContainer.classList.add("bot-message-container");
-    botMessageContainer.id = "typingIndicator"; // Assign ID for removal
+    botMessageContainer.id = "typingIndicator";
 
     const avatarImg = document.createElement("img");
     avatarImg.src = document.body.classList.contains("dark-mode")
@@ -130,194 +336,138 @@ document.addEventListener("DOMContentLoaded", function () {
     messageTextDiv.innerHTML = "<em>Smart Assist is typing...</em>";
 
     botMessageDiv.appendChild(messageTextDiv);
-
     botMessageContainer.appendChild(avatarImg);
     botMessageContainer.appendChild(botMessageDiv);
-
     messageContainer.appendChild(botMessageContainer);
-    messageContainer.scrollTop = messageContainer.scrollHeight;
 
-    console.log("Typing indicator shown.");
+    messageContainer.scrollTop = messageContainer.scrollHeight;
   }
 
-  // Function to hide typing indicator
   function hideTypingIndicator() {
     const typingIndicator = document.getElementById("typingIndicator");
     if (typingIndicator) {
       typingIndicator.remove();
-      console.log("Typing indicator hidden.");
     }
   }
 
-  // Function to add user message
-  function addUserMessage(message) {
-    const userMessageContainer = document.createElement("div");
-    userMessageContainer.classList.add("user-message-container");
+  // ----------------------------
+  // Function: Temporary Feedback Message as Toast
+  // ----------------------------
 
-    const userMessageDiv = document.createElement("div");
-    userMessageDiv.classList.add("user-message");
+  /**
+   * Displays a toast message below the specified bot message container.
+   * @param {string} text - The message to display in the toast.
+   * @param {string} type - The type of feedback ('like' or 'dislike').
+   * @param {HTMLElement} botMessageContainer - The bot message container where the toast should appear.
+   */
+  function showTemporaryMessage(text, type, botMessageContainer) {
+    if (!botMessageContainer) return; // Exit if botMessageContainer doesn't exist
 
-    const messageTextDiv = document.createElement("div");
-    messageTextDiv.classList.add("message-text");
-    messageTextDiv.textContent = message;
+    // Select the toast container within the specific bot message
+    const toastContainer = botMessageContainer.querySelector(".toast-container");
+    if (!toastContainer) return; // Exit if toastContainer doesn't exist
 
-    // Create message footer
-    const messageFooter = document.createElement("div");
-    messageFooter.classList.add("message-footer");
+    // Remove existing toasts to prevent stacking
+    const existingToasts = toastContainer.querySelectorAll(".message-toast");
+    existingToasts.forEach((toast) => toast.remove());
 
-    // Timestamp
-    const timestampDiv = document.createElement("div");
-    timestampDiv.classList.add("user-timestamp");
-    timestampDiv.textContent = getCurrentTime();
+    // Create the toast element
+    const toast = document.createElement("div");
+    toast.classList.add("message-toast");
 
-    // Append timestamp to footer
-    messageFooter.appendChild(timestampDiv);
-
-    // Append text and footer to message div
-    userMessageDiv.appendChild(messageTextDiv);
-    userMessageDiv.appendChild(messageFooter);
-
-    const userAvatarDiv = document.createElement("div");
-    userAvatarDiv.classList.add("user-avatar");
-    userAvatarDiv.innerHTML = USER_AVATAR_ICON;
-
-    userMessageContainer.appendChild(userMessageDiv);
-    userMessageContainer.appendChild(userAvatarDiv);
-    messageContainer.appendChild(userMessageContainer);
-
-    messageContainer.scrollTop = messageContainer.scrollHeight;
-
-    console.log("User message added:", message);
-  }
-
-  // Function to add bot message
-  function addBotMessage(message) {
-    const botMessageContainer = document.createElement("div");
-    botMessageContainer.classList.add("bot-message-container");
-
-    const avatarImg = document.createElement("img");
-    avatarImg.src = document.body.classList.contains("dark-mode")
-      ? BOT_AVATAR_DARK
-      : BOT_AVATAR_LIGHT;
-    avatarImg.alt = "Bot Avatar";
-    avatarImg.classList.add("bot-logo");
-
-    const botMessageDiv = document.createElement("div");
-    botMessageDiv.classList.add("bot-message");
-
-    const messageTextDiv = document.createElement("div");
-    messageTextDiv.classList.add("message-text");
-    messageTextDiv.textContent = message;
-
-    const messageFooter = document.createElement("div");
-    messageFooter.classList.add("message-footer");
-
-    // Feedback Buttons Container
-    const feedbackDiv = document.createElement("div");
-    feedbackDiv.classList.add("feedback-buttons");
-
-    // Sound Button
-    const soundBtn = document.createElement("button");
-    soundBtn.classList.add("sound-btn");
-    soundBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
-    soundBtn.addEventListener("click", function () {
-      speakText(message);
-      console.log("Sound button clicked.");
-    });
-
-    // Thumbs Up Button
-    const thumbsUp = document.createElement("button");
-    thumbsUp.classList.add("thumbs-up");
-    thumbsUp.innerHTML = '<i class="fas fa-thumbs-up"></i>';
-
-    // Thumbs Down Button
-    const thumbsDown = document.createElement("button");
-    thumbsDown.classList.add("thumbs-down");
-    thumbsDown.innerHTML = '<i class="fas fa-thumbs-down"></i>';
-
-    // Add event listeners after both buttons are defined
-    thumbsUp.addEventListener("click", function () {
-      thumbsUp.style.color = "green";
-      thumbsDown.style.color = "";
-      showTemporaryMessage("Thank you for your feedback!", "like");
-      console.log("Thumbs Up clicked.");
-    });
-
-    thumbsDown.addEventListener("click", function () {
-      thumbsDown.style.color = "red";
-      thumbsUp.style.color = "";
-      showTemporaryMessage(
-        "I'm sorry to hear that. I'll improve.",
-        "dislike"
-      );
-      console.log("Thumbs Down clicked.");
-    });
-
-    // Append feedback buttons
-    feedbackDiv.appendChild(soundBtn);
-    feedbackDiv.appendChild(thumbsUp);
-    feedbackDiv.appendChild(thumbsDown);
-
-    // Timestamp
-    const timestampDiv = document.createElement("div");
-    timestampDiv.classList.add("timestamp");
-    timestampDiv.textContent = getCurrentTime();
-
-    // Append feedback and timestamp to footer
-    messageFooter.appendChild(feedbackDiv);
-    messageFooter.appendChild(timestampDiv);
-
-    botMessageDiv.appendChild(messageTextDiv);
-    botMessageDiv.appendChild(messageFooter);
-
-    botMessageContainer.appendChild(avatarImg);
-    botMessageContainer.appendChild(botMessageDiv);
-
-    messageContainer.appendChild(botMessageContainer);
-    messageContainer.scrollTop = messageContainer.scrollHeight;
-
-    console.log("Bot message added:", message);
-  }
-
-  // Function to show temporary messages (feedback)
-  function showTemporaryMessage(text, type) {
-    const temporaryMessageDiv = document.createElement("div");
-    temporaryMessageDiv.classList.add("temporary-message");
-
+    // Add icon and message based on feedback type
     if (type === "like") {
-      temporaryMessageDiv.style.backgroundColor = "#e0f7e9";
-      temporaryMessageDiv.style.color = "#00796b";
+      toast.innerHTML = `<i class="fas fa-thumbs-up" aria-hidden="true"></i> ${text}`;
+      toast.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue("--feedback-like-bg");
+      toast.style.color = getComputedStyle(document.documentElement).getPropertyValue("--feedback-like-color");
     } else if (type === "dislike") {
-      temporaryMessageDiv.style.backgroundColor = "#fdecea";
-      temporaryMessageDiv.style.color = "#c62828";
+      toast.innerHTML = `<i class="fas fa-thumbs-down" aria-hidden="true"></i> ${text}`;
+      toast.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue("--feedback-dislike-bg");
+      toast.style.color = getComputedStyle(document.documentElement).getPropertyValue("--feedback-dislike-color");
     }
 
-    temporaryMessageDiv.textContent = text;
-    messageContainer.appendChild(temporaryMessageDiv);
+    // Add ARIA attributes for accessibility
+    toast.setAttribute("role", "alert");
+    toast.setAttribute("aria-live", "assertive");
 
-    messageContainer.scrollTop = messageContainer.scrollHeight;
+    // Append the toast to the toastContainer
+    toastContainer.appendChild(toast);
 
+    // Automatically remove the toast after 4 seconds with fade-out
     setTimeout(() => {
-      temporaryMessageDiv.remove();
-      console.log("Temporary message removed:", text);
+      toast.classList.add("fade-out");
+      toast.addEventListener("transitionend", () => {
+        toast.remove();
+      });
     }, 4000);
   }
 
-  // Function to handle text-to-speech
+  // ----------------------------
+  // Function: Text-to-Speech
+  // ----------------------------
+
   function speakText(text) {
     if ("speechSynthesis" in window) {
       const utterance = new SpeechSynthesisUtterance(text);
       window.speechSynthesis.speak(utterance);
-      console.log("Speaking text:", text);
     } else {
       alert("Sorry, your browser doesn't support text-to-speech.");
-      console.error("Text-to-speech not supported.");
     }
   }
 
-  // Function to get current time in HH:MM format
-  function getCurrentTime() {
-    const now = new Date();
-    return now.getHours() + ":" + String(now.getMinutes()).padStart(2, "0");
+  // ----------------------------
+  // Function: Download Transcript
+  // ----------------------------
+
+  /**
+   * Gathers all chat messages and downloads them as a transcript.
+   */
+  function downloadTranscript() {
+    let transcript = "";
+    
+    // Select all message containers (both user and bot messages)
+    const messages = messageContainer.querySelectorAll(".user-message-container, .bot-message-container");
+    
+    messages.forEach((msg) => {
+      // Check if it's a user message
+      if (msg.classList.contains("user-message-container")) {
+        const userMessage = msg.querySelector(".user-message .message-text").textContent;
+        const timestamp = msg.querySelector(".user-timestamp").textContent;
+        transcript += `User (${timestamp}): ${userMessage}\n`;
+      }
+      
+      // Check if it's a bot message
+      if (msg.classList.contains("bot-message-container")) {
+        const botMessage = msg.querySelector(".bot-message .message-text").textContent;
+        const timestamp = msg.querySelector(".timestamp").textContent;
+        transcript += `Smart Assist (${timestamp}): ${botMessage}\n`;
+      }
+    });
+    
+    // Create a Blob from the transcript
+    const blob = new Blob([transcript], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    
+    // Create a temporary link to trigger the download
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "chat_transcript.txt";
+    document.body.appendChild(a);
+    a.click();
+    
+    // Clean up
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   }
+
+  // ----------------------------
+  // Event Listener: Download Transcript
+  // ----------------------------
+
+  if (downloadBtn) {
+    downloadBtn.addEventListener("click", function () {
+      downloadTranscript();
+    });
+  }
+
 });
