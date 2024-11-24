@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const startTime = formatCurrentTime();
       chatStatus.innerHTML = `
         Chat started at ${startTime}<br>
-        You are chatting with SmartAssist
+        You are chatting with Smart Assist
       `;
     }
 
@@ -114,7 +114,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // ----------------------------
 
   function addWelcomeMessage() {
-    const welcomeMessage1 = "Welcome User. I'm your virtual assistant SmartAssist, and I'm here to help you with all your Credit Card related questions.";
+    const welcomeMessage1 = "Welcome User. I'm your virtual assistant Smart Assist, and I'm here to help you with all your Credit Card related questions.";
     const welcomeMessage2 = "Do you maybe have a question about an existing card or transaction?";
     
     // First welcome message
@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (sendBtn && userInput) {
     sendBtn.addEventListener("click", function () {
-      const message = userInput.value.trim();
+      let message = userInput.value.trim();
       if (message) {
         addUserMessage(message);
         userInput.value = "";
@@ -180,6 +180,11 @@ document.addEventListener("DOMContentLoaded", function () {
   // ----------------------------
 
   function addUserMessage(message) {
+    // Capitalize the first letter of the message
+    if (message.length > 0) {
+      message = message.charAt(0).toUpperCase() + message.slice(1);
+    }
+
     const userMessageContainer = document.createElement("div");
     userMessageContainer.classList.add("user-message-container");
 
@@ -257,7 +262,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const soundBtn = document.createElement("button");
     soundBtn.classList.add("sound-btn");
-    soundBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+    soundBtn.innerHTML = '<i class="fas fa-volume-up sound-icon"></i>';
     soundBtn.addEventListener("click", function () {
       speakText(message);
     });
@@ -266,8 +271,8 @@ document.addEventListener("DOMContentLoaded", function () {
     thumbsUp.classList.add("thumbs-up");
     thumbsUp.innerHTML = '<i class="fas fa-thumbs-up"></i>';
     thumbsUp.addEventListener("click", function () {
-      thumbsUp.style.color = "green";
-      thumbsDown.style.color = "";
+      thumbsUp.classList.add("active");
+      thumbsDown.classList.remove("active");
       showTemporaryMessage("Thank you for your feedback!", "like", botMessageContainer);
     });
 
@@ -275,8 +280,8 @@ document.addEventListener("DOMContentLoaded", function () {
     thumbsDown.classList.add("thumbs-down");
     thumbsDown.innerHTML = '<i class="fas fa-thumbs-down"></i>';
     thumbsDown.addEventListener("click", function () {
-      thumbsDown.style.color = "red";
-      thumbsUp.style.color = "";
+      thumbsDown.classList.add("active");
+      thumbsUp.classList.remove("active");
       showTemporaryMessage("I'm sorry to hear that. I'll improve.", "dislike", botMessageContainer);
     });
 
@@ -297,7 +302,7 @@ document.addEventListener("DOMContentLoaded", function () {
     botMessageDiv.appendChild(messageFooter);
 
     // ----------------------------
-    // New: Toast Container for This Bot Message
+    // Toast Container for This Bot Message
     // ----------------------------
     const toastContainer = document.createElement("div");
     toastContainer.classList.add("toast-container");
@@ -354,12 +359,6 @@ document.addEventListener("DOMContentLoaded", function () {
   // Function: Temporary Feedback Message as Toast
   // ----------------------------
 
-  /**
-   * Displays a toast message below the specified bot message container.
-   * @param {string} text - The message to display in the toast.
-   * @param {string} type - The type of feedback ('like' or 'dislike').
-   * @param {HTMLElement} botMessageContainer - The bot message container where the toast should appear.
-   */
   function showTemporaryMessage(text, type, botMessageContainer) {
     if (!botMessageContainer) return; // Exit if botMessageContainer doesn't exist
 
@@ -419,9 +418,6 @@ document.addEventListener("DOMContentLoaded", function () {
   // Function: Download Transcript
   // ----------------------------
 
-  /**
-   * Gathers all chat messages and downloads them as a transcript.
-   */
   function downloadTranscript() {
     let transcript = "";
     
