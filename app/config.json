@@ -8,6 +8,6 @@
   "relevance_threshold": 0.8,
   "top_k": 3,
   "batch_size": 100,
-  "dataset_path": "Dataset/Credit_FAQ_Dataset.csv",
+  "dataset_path": "dataset/Credit_FAQ_Dataset.csv",
   "logging_level": "DEBUG"
 }
