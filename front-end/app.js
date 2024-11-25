@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const messageContainer = document.getElementById("messageContainer");
   const chatStatus = document.getElementById("chatStatus"); // Chat Status Section
   const downloadBtn = document.getElementById("downloadChatBtn"); // Download Transcript Button
+  const micBtn = document.getElementById("micBtn"); // Microphone Button
 
   // ----------------------------
   // Asset Paths
@@ -463,6 +464,56 @@ document.addEventListener("DOMContentLoaded", function () {
   if (downloadBtn) {
     downloadBtn.addEventListener("click", function () {
       downloadTranscript();
+    });
+  }
+
+  // ----------------------------
+  // Voice Input Functionality
+  // ----------------------------
+
+  let recognizing = false;
+  let recognition;
+
+  if ("webkitSpeechRecognition" in window) {
+    recognition = new webkitSpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = "en-US";
+
+    recognition.onstart = function () {
+      recognizing = true;
+      micBtn.classList.add("recording"); // Add recording state
+    };
+
+    recognition.onresult = function (event) {
+      const transcript = event.results[0][0].transcript;
+      addUserMessage(transcript);
+      userInput.value = transcript;
+      sendBtn.click();
+    };
+
+    recognition.onerror = function (event) {
+      console.error("Speech recognition error:", event.error);
+      recognizing = false;
+      micBtn.classList.remove("recording");
+    };
+
+    recognition.onend = function () {
+      recognizing = false;
+      micBtn.classList.remove("recording");
+    };
+  } else {
+    micBtn.disabled = true;
+    micBtn.title = "Voice input not supported in this browser.";
+  }
+
+  if (micBtn) {
+    micBtn.addEventListener("click", function () {
+      if (recognizing) {
+        recognition.stop();
+        return;
+      }
+      recognition.start();
     });
   }
 
