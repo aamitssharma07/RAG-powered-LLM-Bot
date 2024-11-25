@@ -11,21 +11,8 @@
   <!-- FontAwesome for additional icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
   
-  <!-- Material Symbols Outlined -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&icon_names=download" />
-  
-  <!-- Custom CSS for Material Symbols -->
-  <style>
-    .material-symbols-outlined {
-      font-variation-settings:
-        'FILL' 0,
-        'wght' 400,
-        'GRAD' 0,
-        'opsz' 24;
-      /* Ensures the icon inherits the current text color */
-      color: inherit;
-    }
-  </style>
+  <!-- Material Symbols Outlined for Download and Microphone Icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
   
   <!-- Merged CSS -->
   <link rel="stylesheet" href="styles.css">
@@ -42,7 +29,7 @@
     <!-- Chat Header -->
     <div class="bg-blue-500 text-white rounded-t-lg flex items-center px-4 h-16">
       <!-- Theme Toggle Button -->
-      <button id="themeToggleBtn" class="header-btn text-white mr-4" aria-label="Toggle Theme">
+      <button id="themeToggleBtn" class="header-btn text-white mr-4" aria-label="Toggle Theme" title="Toggle Theme">
         <i class="fas fa-moon text-lg"></i>
       </button>
       
@@ -53,12 +40,12 @@
       </div>
       
       <!-- Download Transcript Button -->
-      <button id="downloadChatBtn" class="header-btn text-white mx-1" aria-label="Download Transcript">
-        <span class="material-symbols-outlined text-xl">download</span>
+      <button id="downloadChatBtn" class="header-btn text-white mx-1" aria-label="Download Transcript" title="Download Transcript">
+        <span class="material-symbols-outlined">download</span>
       </button>
       
       <!-- Minimize Chat Button -->
-      <button id="closeChat" class="header-btn text-white ml-0" aria-label="Minimize Chat">
+      <button id="closeChat" class="header-btn text-white ml-0" aria-label="Minimize Chat" title="Minimize Chat">
         <i class="fas fa-minus text-lg"></i>
       </button>
     </div>
@@ -77,7 +64,13 @@
         <input id="userInput" type="text" class="input-field w-full border pl-3 focus:outline-none" placeholder=" "/>
         <label for="userInput" class="input-label absolute left-5 text-grey-500 transition-all">Type your message</label>
       </div>
-      <button id="sendBtn" class="send-btn flex items-center justify-center ml-2" aria-label="Send Message">
+      
+      <!-- Microphone Button -->
+      <button id="micBtn" class="mic-btn flex items-center justify-center ml-2" aria-label="Voice Input" title="Voice Input">
+        <span class="material-symbols-outlined">mic</span>
+      </button>
+      
+      <button id="sendBtn" class="send-btn flex items-center justify-center ml-2" aria-label="Send Message" title="Send Message">
         <i class="fas fa-arrow-right"></i>
       </button>
     </div>
