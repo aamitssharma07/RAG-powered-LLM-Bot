@@ -7,6 +7,8 @@ from os import getenv
 from pinecone import Pinecone, Index
 from langchain_openai.embeddings import OpenAIEmbeddings
 from langchain_openai.chat_models import ChatOpenAI
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 # Load environment variables
 load_dotenv()
@@ -102,6 +104,14 @@ def generate_llm_response(relevant_document: str, query: str) -> str:
         logging.error(f"Error generating LLM response: {e}")
         raise HTTPException(status_code=500, detail="Error generating the response.")
 
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Replace "*" with your frontend's URL for better security
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all HTTP methods
+    allow_headers=["*"],  # Allow all headers
+)
 
 @app.get("/process_query/")
 async def handle_user_query(query1: str = Query(...), top_k: int = TOP_K_DEFAULT):
