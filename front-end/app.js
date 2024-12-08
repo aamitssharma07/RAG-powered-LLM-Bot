@@ -24,6 +24,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const BOT_AVATAR_DARK = "images/logo.jpg"; // Bot Avatar for Dark Mode
   const USER_AVATAR_ICON = '<i class="fa-solid fa-user"></i>'; // FontAwesome User Icon
 
+    // FastAPI Endpoint URL
+    const PROCESS_QUERY = "http://localhost:8000/process_query/"; 
+
   // ----------------------------
   // Utility: Format Current Time
   // ----------------------------
@@ -143,29 +146,136 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // ----------------------------
-  // Send Message Functionality
-  // ----------------------------
+  // Flag to track the send button click
+let isSendButtonClicked = false;
 
-  if (sendBtn && userInput) {
-    sendBtn.addEventListener("click", function () {
-      let message = userInput.value.trim();
-      if (message) {
-        addUserMessage(message);
-        userInput.value = "";
+// Function to set the flag when the button is clicked
+function setSendButtonFlag() {
+  isSendButtonClicked = true;
+  console.log("Send button clicked. Flag set to:", isSendButtonClicked);
+}
 
-        // Show typing indicator
-        showTypingIndicator();
+// Ensure the event listener is attached only once
+if (!sendBtn.hasEventListener) {
+  sendBtn.addEventListener("click", async () => {
+    const userText = userInput.value.trim();
 
-        // Simulate bot response
-        setTimeout(() => {
-          hideTypingIndicator();
-          addBotMessage("Thank you for your message! How can I assist further?");
-        }, 1000);
+    // Validate input
+    if (!userText) {
+      alert("Please enter a message before sending.");
+      return;
+    }
+
+    // Add user message to the chat (ensure this is called only once)
+    
+      addUserMessage(userText);
+  
+// Add loading indicator
+const loadingMessage = document.createElement("div");
+loadingMessage.className = "chat-message bot loading";
+loadingMessage.innerHTML = `
+  <div class="avatar">
+    <img src="${
+      document.body.classList.contains("dark-mode") ? BOT_AVATAR_DARK : BOT_AVATAR_LIGHT
+    }" alt="Bot Avatar" class="bot-logo" />
+  </div>
+  <div class="message-content">
+    <p>Thinking...</p>
+    <span class="timestamp">${formatCurrentTime()}</span>
+  </div>`;
+messageContainer.appendChild(loadingMessage);
+
+// Scroll to the latest message
+messageContainer.scrollTop = messageContainer.scrollHeight;
+
+
+
+    // Scroll to the latest message
+    // messageContainer.scrollTop = messageContainer.scrollHeight;
+
+    try {
+      // Construct the API query string
+      const url = new URL(PROCESS_QUERY);
+      url.searchParams.append("query1", userText);
+      url.searchParams.append("top_k", 5);
+
+      // Make the GET request to the FastAPI endpoint
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      // Handle the response
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log("API Response:", responseData);
+
+        // Replace loading indicator with bot response
+        loadingMessage.remove();
+        addBotMessage(responseData.result || "Sorry, no response available.");
+      } else {
+        console.error("API Error:", response.statusText);
+
+        // Replace loading indicator with error message
+        loadingMessage.remove();
+        addBotMessage("Failed to process the query. Please try again.");
       }
-    });
+    } catch (error) {
+      console.error("Error making the API call:", error);
+
+      // Replace loading indicator with error message
+      loadingMessage.remove();
+      addBotMessage("An error occurred while communicating with the server.");
+    }
+
+    // Clear the input field after sending
+    userInput.value = "";
+  });
+
+  // Mark the event listener as added
+  sendBtn.hasEventListener = true;
+}
+
+  
+  function addUserMessage(message) {
+    const userMessage = document.createElement("div");
+    userMessage.className = "chat-message user";
+    userMessage.innerHTML = `
+      <div class="avatar">
+        ${USER_AVATAR_ICON}
+      </div>
+      <div class="message-content bg-blue-500 text-white">
+        <p>${message}</p>
+        <span class="timestamp">${formatCurrentTime()}</span>
+      </div>`;
+    messageContainer.appendChild(userMessage);
+  
+    // Scroll to the latest message
+    messageContainer.scrollTop = messageContainer.scrollHeight;
   }
 
+  
+  function addBotMessage(message) {
+    const botMessage = document.createElement("div");
+    botMessage.className = "chat-message bot";
+    botMessage.innerHTML = `
+      <div class="avatar">
+        <img src="${
+          document.body.classList.contains("dark-mode") ? BOT_AVATAR_DARK : BOT_AVATAR_LIGHT
+        }" alt="Bot Avatar" class="bot-logo" />
+      </div>
+      <div class="message-content bg-gray-300 text-gray-900 dark:bg-gray-700 dark:text-gray-100">
+        <p>${message}</p>
+        <span class="timestamp">${formatCurrentTime()}</span>
+      </div>`;
+    messageContainer.appendChild(botMessage);
+  
+    // Scroll to the latest message
+    messageContainer.scrollTop = messageContainer.scrollHeight;
+  }
+  
   // Send message on Enter key
   if (userInput) {
     userInput.addEventListener("keypress", function (e) {
@@ -487,7 +597,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     recognition.onresult = function (event) {
       const transcript = event.results[0][0].transcript;
-      addUserMessage(transcript);
+      // addUserMessage(transcript);
       userInput.value = transcript;
       sendBtn.click();
     };

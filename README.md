@@ -1,65 +1,56 @@
-# SmartAssist-LLM-RAG-Chatbot
+# RAG-powered-LLM-Bot
 
-This project is an intelligent FAQ chatbot that combines Retrieval-Augmented Generation (RAG) and a Large Language Model (LLM) to provide contextual and human-like responses. It is designed to enhance customer service automation by efficiently handling frequently asked questions (FAQs) while maintaining conversational context in multi-turn queries.
+## **Setup Instructions**
 
-## Project Team
+Follow these steps to set up and run the **RAG-powered-LLM-Bot** on your local system:
 
-- **Aakarsh Mehta** (Fullstack Developer)
-- **Amit Kumar** (ML Engineer)
-- **Manmeet Detroja** (Software Developer)
-- **Sai Krrishnaa Reddi** (Front-end Developer)
+---
 
-## Project Aim
+### **1. Unzip the Folder**
+Unzip the downloaded folder `RAG-powered-LLM-Bot` to extract all the files.
 
-This project integrates the latest advancements in natural language understanding with dynamic information retrieval to improve FAQ handling. The key features include:
-- **RAG Integration**: Combining retrieval techniques with LLMs for contextual responses.
-- **Vector Database**: Storing and querying vector embeddings for fast, semantic matching.
-- **User Experience**: Providing a conversational and personalized user experience.
+---
 
-## Features
+### **2. Navigate to the `app` Directory**
+Open your terminal and navigate to the `app` folder using the command:
 
-- **FAQ Dataset Handling**: Collects, preprocesses, and vectorizes FAQ data for semantic matching.
-- **RAG Integration**: Retrieves the most relevant FAQ entries and uses the LLM for response generation.
-- **Context Retention**: Supports multi-turn conversations by maintaining context across the interaction.
-- **Text-to-Speech**: Along with text also give the bot's response to audio for a better user experience.
-- **Voice Input**: Allows users to input queries through voice using Web Speech API.
+```bash
+cd app
 
-## Project Structure
+3. Create a Virtual Environment
+	python -m venv venv
 
-- `index.html`: Contains the front-end structure for the chatbot UI.
-- `style.css`: Defines the layout and design, including the background, chatbot window, and other elements.
-- `app.js`: Handles the core functionality of the chatbot, including message handling, voice input, and text-to-speech.
+Activate the virtual environment:
 
-## Tech Stack
+	On Windows:
+		venv\Scripts\activate
+	On macOS/Linux:
+		source venv/bin/activate
+		
+4. Set API Keys in .env File
 
-- **Frontend**: HTML, CSS, JavaScript, Tailwind CSS
-- **Backend**: Langchain, Retrieval-augmented generation (RAG) with a vector database and Large Language Model (LLM) for dynamic responses.
-- **APIs**: Web Speech API for voice input and speech synthesis.
+	Open the .env file and set the following API keys:
 
-## Installation
+	OpenAI API Key: OPENAI_API_KEY=<your_openai_api_key>
+	Pinecone API Key: PINECONE_API_KEY=<your_pinecone_api_key>
+	Save and close the .env file.
+	
+5. Install Required Dependencies
+Install the necessary packages listed in requirements.txt:
+pip install -r requirements.txt
 
-1. Clone the repository:
-    ```bash
-    git clone https://github.com/aamitssharma07/RAG-powered-LLM-Bot.git
-    ```
-2. Navigate into the project directory:
-    ```bash
-    cd RAG-powered-LLM-Bot
-    ```
-3. Open `index.html` in your browser to interact with the chatbot.
+6. Set Up the Database
+Initialize the Pinecone vector database by running the script:
+python upload_to_pinecone.py
+This will upload the required embeddings to Pinecone for retrieval.
 
-## Usage
+7. Start the Server
 
-- **Sending Messages**: Type a message or speak using the voice input button, and the chatbot will respond.
-- **Text and Voice Output**: The bot generated both text and audio responses, which can be played by clicking the volume icon in the chatbot's response.
-- **Multi-Turn Conversations**: You can ask follow-up questions, and the chatbot will maintain the context of the conversation.
+Run the following command to start the server:
+python -m uvicorn main:app --reload
+The server will be accessible at http://127.0.0.1:8000.
 
-## Future Enhancements
+8. Interact with the Chatbot
+Open the index.html file in your browser which is in front-end folder to interact with the chatbot. You can use voice-based input or text-based input to query the system.
 
-- **Improve Retrieval Accuracy**: Fine-tune semantic matching for more nuanced queries.
-- **Scalability**: Optimize the vector database for larger datasets and faster retrieval.
-- **API Creation and Integration**: Create an API for the backend and then integrate it with the front end.
-- **Deployment**: Once the back end is integrated with the front end then we will deploy the project on the live server.
-
-
-
+Enjoy exploring the RAG-powered chatbot! 🚀

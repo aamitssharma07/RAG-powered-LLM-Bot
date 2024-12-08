@@ -7,7 +7,6 @@ from os import getenv
 from pinecone import Pinecone, Index
 from langchain_openai.embeddings import OpenAIEmbeddings
 from langchain_openai.chat_models import ChatOpenAI
-from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 # Load environment variables
@@ -35,6 +34,9 @@ embed_model = None
 LLM = None
 THRESHOLD = config["relevance_threshold"]
 TOP_K_DEFAULT = config["top_k"]
+
+# Context management
+context_history = []
 
 
 @app.on_event("startup")
@@ -89,7 +91,7 @@ def filter_relevance(results: List[tuple]) -> str:
             logging.debug(f"Document with score {score} passed the threshold.")
             return document
     logging.debug("No document passed the relevance threshold.")
-    return "The question is beyond the scope of the current documents."
+    return None
 
 
 def generate_llm_response(relevant_document: str, query: str) -> str:
@@ -104,6 +106,40 @@ def generate_llm_response(relevant_document: str, query: str) -> str:
         logging.error(f"Error generating LLM response: {e}")
         raise HTTPException(status_code=500, detail="Error generating the response.")
 
+
+def fallback_handler(query: str) -> str:
+    """Handle fallback logic when no relevant documents are found."""
+    fallback_prompt = (
+        f"You are a helpful assistant specialized in bank-related and credit card queries. "
+        f"Do not answer questions unrelated to banking, credit cards, or general inquiries about bank services. "
+        f"If the query is a greeting, respond politely. "
+        f"If the query is outside the scope of banking or credit cards, respond with: 'The question is beyond the scope of the current documents.'\n\n"
+        f"User Query: {query}\n"
+    )
+    try:
+        logging.debug(f"Sending fallback prompt to LLM: {fallback_prompt}")
+        response = LLM.invoke(fallback_prompt, timeout=10)
+        logging.debug("Fallback response generated successfully.")
+        return response.content.strip()
+    except Exception as e:
+        logging.error(f"Error during fallback handling: {e}")
+        raise HTTPException(status_code=500, detail="Error during fallback handling.")
+
+
+def maintain_context(new_query: str, context_limit: int = 3):
+    """Maintain a limited context history for better responses."""
+    global context_history
+    context_history.append(new_query)
+    if len(context_history) > context_limit:
+        context_history.pop(0)  # Remove the oldest query
+
+
+def generate_prompt_with_context(query: str) -> str:
+    """Generate a combined prompt with limited context."""
+    global context_history
+    return "\n".join(context_history + [query])
+
+
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
@@ -112,6 +148,7 @@ app.add_middleware(
     allow_methods=["*"],  # Allow all HTTP methods
     allow_headers=["*"],  # Allow all headers
 )
+
 
 @app.get("/process_query/")
 async def handle_user_query(query1: str = Query(...), top_k: int = TOP_K_DEFAULT):
@@ -122,20 +159,23 @@ async def handle_user_query(query1: str = Query(...), top_k: int = TOP_K_DEFAULT
     try:
         logging.debug(f"Received query: {query1}")
 
-        # Step 1: Retrieve relevant documents
+        # Step 1: Maintain context
+        maintain_context(query1)
+
+        # Step 2: Retrieve relevant documents
         retrieval_results = query_pinecone_for_relevant_docs(query1, top_k=top_k)
 
-        # Step 2: Filter results by relevance
+        # Step 3: Filter results by relevance
         relevant_document = filter_relevance(retrieval_results)
 
-        # Step 3: Generate response if relevant; otherwise, return off-topic message
-        if relevant_document == "The question is beyond the scope of the current documents.":
-            logging.debug("No relevant document found. Returning fallback message.")
-            return {"status": "success", "result": relevant_document}
-        else:
+        # Step 4: Generate response if relevant; otherwise, handle fallback
+        if relevant_document:
             final_answer = generate_llm_response(relevant_document, query1)
-            logging.debug(f"Returning final answer: {final_answer}")
-            return {"status": "success", "result": final_answer}
+        else:
+            final_answer = fallback_handler(query1)
+
+        logging.debug(f"Returning final answer: {final_answer}")
+        return {"status": "success", "result": final_answer}
     except Exception as e:
         logging.error(f"Error processing query: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error processing query: {str(e)}")

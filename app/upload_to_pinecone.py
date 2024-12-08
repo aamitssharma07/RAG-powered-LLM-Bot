@@ -2,9 +2,11 @@ import json
 import os
 import pandas as pd
 import logging
+import time
 from dotenv import load_dotenv
-from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_openai import OpenAIEmbeddings
 from pinecone import Pinecone, ServerlessSpec
+from tenacity import retry, wait_fixed, stop_after_attempt
 
 # Load environment variables
 load_dotenv()
@@ -14,12 +16,15 @@ with open("config.json", "r") as config_file:
     config = json.load(config_file)
 
 # Configure logging
-logging_level = getattr(logging, config.get("logging_level", "DEBUG").upper(), logging.DEBUG)
+logging_level = getattr(logging, config.get("logging_level", "INFO").upper(), logging.INFO)
 logging.basicConfig(level=logging_level)
 
 # Load sensitive keys from .env
 pinecone_api_key = os.getenv("PINECONE_API_KEY")
 openai_api_key = os.getenv("OPENAI_API_KEY")
+
+if not pinecone_api_key or not openai_api_key:
+    raise EnvironmentError("Missing Pinecone or OpenAI API key in environment variables.")
 
 # Initialize Pinecone
 pinecone = Pinecone(api_key=pinecone_api_key)
@@ -31,14 +36,15 @@ if index_name not in [index.name for index in pinecone.list_indexes()]:
         name=index_name,
         dimension=config["dimension"],
         metric=config["metric"],
-        spec=ServerlessSpec(cloud="aws", region=config["pinecone_region"])  # Dynamic region
+        spec=ServerlessSpec(cloud="aws", region=config["pinecone_region"])
     )
 index = pinecone.Index(index_name)
 logging.info(f"Connected to Pinecone index: {index_name}")
 
 # Load dataset
 dataset_path = config["dataset_path"]
-data = pd.read_csv(dataset_path)  # Adjust path if necessary
+data = pd.read_csv(dataset_path)
+
 if data.empty:
     raise ValueError(f"The dataset at {dataset_path} is empty.")
 if "instruction" not in data.columns:
@@ -49,17 +55,24 @@ logging.info(f"Loaded {len(data)} rows from the dataset.")
 embed_model = OpenAIEmbeddings(model=config["embedding_model"])
 logging.info(f"Embedding model '{config['embedding_model']}' initialized.")
 
+# Retry logic for embedding generation
+@retry(wait=wait_fixed(2), stop=stop_after_attempt(3))
+def generate_batch_embeddings(batch):
+    return embed_model.embed_documents(batch)
+
 # Generate embeddings in batches
 def generate_embeddings_in_batches(documents, batch_size):
     embeddings = []
     for i in range(0, len(documents), batch_size):
         batch = documents[i:i + batch_size]
         try:
-            batch_embeddings = embed_model.embed_documents(batch)
+            batch_embeddings = generate_batch_embeddings(batch)
             embeddings.extend(batch_embeddings)
             logging.info(f"Processed batch {i // batch_size + 1} of {len(documents) // batch_size + 1}")
         except Exception as e:
             logging.error(f"Error in batch {i // batch_size + 1}: {e}")
+            raise
+        time.sleep(1)  # Avoid rate limits
     return embeddings
 
 # Generate embeddings for the instructions
@@ -81,8 +94,12 @@ all_meta_data = prepare_data_for_pinecone(data["instruction"].tolist(), data["in
 def upsert_in_batches(data, batch_size):
     for i in range(0, len(data), batch_size):
         batch = data[i:i + batch_size]
-        index.upsert(vectors=batch)
-        logging.info(f"Uploaded batch {i // batch_size + 1} of {len(data) // batch_size + 1}")
+        try:
+            index.upsert(vectors=batch)
+            logging.info(f"Uploaded batch {i // batch_size + 1} of {len(data) // batch_size + 1}")
+        except Exception as e:
+            logging.error(f"Error uploading batch {i // batch_size + 1}: {e}")
+            raise
 
 upsert_in_batches(all_meta_data, config["batch_size"])
 logging.info("All data successfully uploaded to Pinecone.")

@@ -9,4 +9,5 @@ langchain-community
 uvicorn
 fastapi
 langchain-openai
+pandas
 

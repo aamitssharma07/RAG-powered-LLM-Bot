@@ -1,0 +1,35 @@
+# Byte-compiled files
+__pycache__/
+*.py[cod]
+
+
+# Virtual Environment
+venv/
+
+# VS Code Settings
+.vscode/
+
+# Logs and databases
+*.log
+*.sqlite3
+
+# Python eggs and caches
+*.egg-info/
+.eggs/
+*.egg
+*.pyo
+
+# Temporary files
+*.tmp
+*.swp
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# IDE Files
+.idea/
+*.iml
+
+# System files
+.DS_Store
+Thumbs.db
