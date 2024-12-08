@@ -7,11 +7,14 @@ Follow these steps to set up and run the **RAG-powered-LLM-Bot** on your local s
 ---
 
 ### **1. Unzip the Folder**
-Unzip the downloaded folder `RAG-powered-LLM-Bot` to extract all the files.
+
+Clone the repo
+git clone https://github.com/aamitssharma07/RAG-powered-LLM-Bot
 
 ---
 
 ### **2. Navigate to the `app` Directory**
+
 Open your terminal and navigate to the `app` folder using the command:
 
 ```bash
@@ -26,7 +29,7 @@ Activate the virtual environment:
 		venv\Scripts\activate
 	On macOS/Linux:
 		source venv/bin/activate
-		
+
 4. Set API Keys in .env File
 
 	Open the .env file and set the following API keys:
@@ -34,7 +37,7 @@ Activate the virtual environment:
 	OpenAI API Key: OPENAI_API_KEY=<your_openai_api_key>
 	Pinecone API Key: PINECONE_API_KEY=<your_pinecone_api_key>
 	Save and close the .env file.
-	
+
 5. Install Required Dependencies
 Install the necessary packages listed in requirements.txt:
 pip install -r requirements.txt
@@ -54,3 +57,4 @@ The server will be accessible at http://127.0.0.1:8000.
 Open the index.html file in your browser which is in front-end folder to interact with the chatbot. You can use voice-based input or text-based input to query the system.
 
 Enjoy exploring the RAG-powered chatbot! 🚀
+```
