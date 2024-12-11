@@ -6,9 +6,9 @@ Follow these steps to set up and run the **RAG-powered-LLM-Bot** on your local s
 
 ---
 
-### **1. Unzip the Folder**
+### **1. Clone the repo**
 
-Clone the repo
+
 
 
 git clone https://github.com/aamitssharma07/RAG-powered-LLM-Bot
